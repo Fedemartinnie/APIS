@@ -1,0 +1,13 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas pasen a la siguiente fila */
+    justify-content: space-between; /* Distribuye las tarjetas horizontalmente */
+    gap: 16px; /* Espacio entre las tarjetas */
+  }
+  
+  .card {
+    /* Estilos de tu tarjeta, como ancho, altura, bordes, etc. */
+    width: calc(25% - 16px); /* 4 tarjetas en una fila (25% de ancho cada una) con espacio entre ellas */
+    margin-bottom: 16px; /* Espacio debajo de cada tarjeta */
+  }
+  
