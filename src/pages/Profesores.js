@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../componentes/AuthContext';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -14,107 +14,237 @@ import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormPropsTextFields from '../componentes/Forms';
 import imageProfesores from '../img/Profesores-header.jpeg';
-import VistaClase from './VistaClase';
-import AuthProvider from '../componentes/AuthContext';
 
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Album() {
-  // Un estado para mantener el estado de publicación de cada clase
-  const [classPublicationStatus, setClassPublicationStatus] = useState(
-    new Array(cards.length).fill(false) // Inicialmente todas las clases están despublicadas
-  );
+  const { isLogin } = useContext(AuthContext);
+  const [showMore, setShowMore] = useState(0); // Estado para realizar un seguimiento de cuántas tarjetas adicionales mostrar
+  const cardsPerPage = 3; // Número de tarjetas por página
 
-  // Función para alternar el estado de publicación de una clase
-  const togglePublicationStatus = (index) => {
-    const newStatus = [...classPublicationStatus];
-    newStatus[index] = !newStatus[index];
-    setClassPublicationStatus(newStatus);
+  const [classes, setClasses] = useState([
+    {
+      className: 'Matematica',
+      profesorName: 'Profesor 1',
+      tipo: 'grupal',
+      frecuencia: 'unica',
+      costo: 3500,
+      published: false,
+    },
+    {
+      className: 'ingles',
+      profesorName: 'Profesor 2',
+      tipo: 'individual',
+      frecuencia: 'mensual',
+      costo: 4000,
+      published: true,
+    },
+    {
+      className: 'Musica',
+      profesorName: 'Profesor 3',
+      tipo: 'individual',
+      frecuencia: 'unica',
+      costo: 5000,
+      published: true,
+    },
+    {
+      className: 'Matematica',
+      profesorName: 'Profesor 4',
+      tipo: 'grupal',
+      frecuencia: 'Semanal',
+      costo: 1000,
+      published: false,
+    },
+    {
+      className: 'Programacion',
+      profesorName: 'Profesor 5',
+      tipo: 'individual',
+      frecuencia: 'mensual',
+      costo: 3500,
+      published: true,
+    },
+    {
+      className: 'Programacion',
+      profesorName: 'Profesor 4',
+      tipo: 'grupal',
+      frecuencia: 'mensual',
+      costo: 2000,
+      published: true,
+    },
+    {
+      className: 'Matematica',
+      profesorName: 'Profesor 1',
+      tipo: 'grupal',
+      frecuencia: 'unica',
+      costo: 3500,
+      published: false,
+    },
+    {
+      className: 'ingles',
+      profesorName: 'Profesor 2',
+      tipo: 'individual',
+      frecuencia: 'mensual',
+      costo: 4000,
+      published: true,
+    },
+    {
+      className: 'Musica',
+      profesorName: 'Profesor 3',
+      tipo: 'individual',
+      frecuencia: 'unica',
+      costo: 5000,
+      published: true,
+    },
+    {
+      className: 'Matematica',
+      profesorName: 'Profesor 4',
+      tipo: 'grupal',
+      frecuencia: 'Semanal',
+      costo: 1000,
+      published: true,
+    },
+    {
+      className: 'Programacion',
+      profesorName: 'Profesor 5',
+      tipo: 'individual',
+      frecuencia: 'mensual',
+      costo: 3500,
+      published: true,
+    },
+    {
+      className: 'Programacion',
+      profesorName: 'Profesor 4',
+      tipo: 'grupal',
+      frecuencia: 'mensual',
+      costo: 2000,
+      published: true,
+    },
+  ]);
+
+  // Function to add a new class
+  const addClass = (newClassData) => {
+    setClasses((prevClasses) => [
+      ...prevClasses,
+      { ...newClassData, published: false }, // inicializar unpublished
+    ]);
   };
+
+  // funcion para cambiar el estado de la publicacion (public/unpublished)
+  const togglePublicationStatus = (index) => {
+    setClasses((prevClasses) => {
+      const newClasses = [...prevClasses];
+      newClasses[index].published = !newClasses[index].published;
+      return newClasses;
+    });
+  };
+
+  // si no esta loggeado solo muestra las publicadas sino muestra todas
+  const filteredClasses = isLogin? 
+  classes : classes.filter((cls) => cls.published);
+
+  // Controla si el botón "Mostrar Más" debe mostrarse
+  const shouldShowMoreButton = filteredClasses.length > cardsPerPage + showMore;
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <main>
-        {/* Hero unit */}
         <Box
           sx={{
             backgroundImage: `url(${imageProfesores})`,
             bgcolor: 'aquamarine',
             pt: 8,
             pb: 6,
-            backgroundSize: 'cover', // Ajusta la imagen al tamaño del contenedor
-            backgroundRepeat: 'no-repeat', // Evita que la imagen se repita
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            display: 'flex',   
           }}
         >
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-            >
-              <FormPropsTextFields isProfesoresPage={true} />
-            </Typography>
-          </Container>
+          <div style={{ maxWidth: '80%', margin: '0 auto', textAlign: 'center'}}>
+            <FormPropsTextFields 
+              onAddClass={addClass}
+              isLogin={isLogin}
+            />
+          </div>
         </Box>
         <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
           <Grid container spacing={3}>
-            {cards.map((card, index) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {filteredClasses.slice(0, cardsPerPage + showMore).map((cls, index) => (
+              <Grid item key={index} xs={12} sm={6} md={4}>
                 <Card
-                  sx={{ height: '100%', display: 'flex', 
-                  flexDirection: 'column' ,backgroundColor: classPublicationStatus[index] ? 'aquamarine' : 'lightcoral'}}
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    backgroundColor: cls.published ? 'aquamarine' : 'lightcoral',
+                  }}
                 >
                   <CardMedia
                     component="div"
                     sx={{
-                      // 16:9
                       pt: '56.25%',
                     }}
                     image="https://source.unsplash.com/random?wallpapers"
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      ClassName
+                      {cls.className}
                     </Typography>
-                    <Typography>
-                     Aqui van los datos principales de la materia
-                    </Typography>
+                    <Typography>Profesor: {cls.profesorName}</Typography>
+                    <Typography>Tipo: {cls.tipo}</Typography>
+                    <Typography>Frecuencia: {cls.frecuencia}</Typography>
+                    <Typography>Costo: ${cls.costo} </Typography>
                     <CardActions>
-                      <Link to='/VistaClase'>
+                      <Link to="/VistaClase">
                         <Button size="small">View</Button>
                       </Link>
-                      <Button size="small">Edit</Button>
+                      {isLogin ? (
+                          <Link to="/ListaContratos">
+                            <Button size="small">ver alumnos</Button>
+                          </Link>
+                          ) : (
+                          <Link to="/ContratarServicio">
+                            <Button size="small">Inscribirse</Button>
+                          </Link>
+                      )}
                     </CardActions>
-                    <CardActions>
-                      <Button size="small" onClick={() => togglePublicationStatus(index)}>
-                        {classPublicationStatus[index] ? 'Despublicar' : 'Publicar'}
-                      </Button>
-                    </CardActions>
+                    {isLogin && (
+                      <CardActions>
+                        <Button
+                          size="small"
+                          onClick={() => togglePublicationStatus(index)}
+                        >
+                          {cls.published ? 'Despublicar' : 'Publicar'}
+                        </Button>
+                      </CardActions>
+                    )}
                   </CardContent>
-                  
                 </Card>
               </Grid>
             ))}
-            <Grid
-              sx={{ pt: 4 }}
-              container
-              spacing={2}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid item>
-                <Button variant="contained">Mostrar Más</Button>
-              </Grid>
             </Grid>
-          </Grid>
+            {shouldShowMoreButton && (
+            <div> {/* Contenedor para los botones */}
+              <Grid
+                sx={{ pt: 4 }}
+                container
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={() => setShowMore((prev) => prev + cardsPerPage)}
+                  >
+                    Mostrar Más
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+          )}
         </Container>
       </main>
     </ThemeProvider>

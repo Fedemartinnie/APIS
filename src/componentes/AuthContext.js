@@ -1,30 +1,16 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
-// Crea el contexto de autenticación
 const AuthContext = createContext();
 
-// Hook personalizado para acceder al contexto de autenticación
-export function useAuth() {
-  return useContext(AuthContext);
-}
+const AuthProvider = ({ children }) => {
+  //seteo de logeado true o false
+  const [isLogin, setIsLogin] = useState(false);
 
-// Componente proveedor que envuelve la aplicación
-export default function AuthProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  return (
+    <AuthContext.Provider value={{ isLogin, setIsLogin }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-  const login = () => {
-    setIsLoggedIn(true);
-  };
-
-  const logout = () => {
-    setIsLoggedIn(false);
-  };
-
-  const value = {
-    isLoggedIn,
-    login,
-    logout,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+export { AuthContext, AuthProvider };

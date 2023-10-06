@@ -1,25 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../componentes/AuthContext';
 import VideoComponent from '../componentes/Video';
-import BasicRating from '../componentes/Rating';
+import Button from '@mui/material/Button';
 import Comentario from '../componentes/FeedBack';
-import { Padding } from '@mui/icons-material';
+import { Link } from '@mui/material';
 
 export default function VistaClase() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { isLogin } = useContext(AuthContext);
+
   const comentarios = [
     { nombreUsuario: 'Fede Nie', fecha: '2023-09-30', comentario: 'Lorem ipsum 1kajsndfkj lkasdlk flaksdl fkl alskdf laksmdfl asdlkf skldf kls dlk lkjaslkdfj alkipsum 1kajsndfkj lkasdlk flaksdl fkl alskdf laksmdfl asdlkf skldf kls dlk lkjaslkdfj alk' },
     { nombreUsuario: 'Usuario2', fecha: '2023-09-29', comentario: 'Lorem ipsum 2' },
-    // Agrega más comentarios aquí según sea necesario
   ];
-
-  const toggleComentarios = () => {
-    // Lógica para mostrar u ocultar los comentarios
-  };
 
   return (
     <div>
-      <div>
+      <div style={{ backgroundColor: 'lightblue' }}>
         <VideoComponent />
       </div>
       <div>
@@ -31,10 +27,17 @@ export default function VistaClase() {
             nombreUsuario={comentario.nombreUsuario}
             fecha={comentario.fecha}
             comentario={comentario.comentario}
-            isLoggedIn={isLoggedIn} // Pasa la variable isLoggedIn como prop
+            isLogin={isLogin} // Pasa la variable isLogin como prop
           />
         </div>
       ))}
+      {!isLogin && (//si no esta loggeado podra agregar comentarios
+        <div>
+          <Link to='/Profesores'>
+            <Button variant="contained">Agregar Comentario</Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

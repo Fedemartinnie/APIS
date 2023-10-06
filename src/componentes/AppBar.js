@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,19 +13,17 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Route, Link } from 'react-router-dom';
-import SignIn from '../pages/SignIn';
-import SingUp from '../pages/SignUp';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../componentes/AuthContext';
 
-
-
-const pages = ['Home', 'Clases', 'Profesores', 'Quiénes Somos'];
-//const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-const settings = ['SignIn','SignUp'];
+const pages = ['Home', 'Profesores', 'Quiénes Somos'];
+const settings = ['SignIn', 'SignUp', 'LogOut', 'Contratos'];
 
 function ResponsiveAppBar() {
+  const { isLogin, setIsLogin } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,6 +40,14 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  //Lógica para cerrar la sesión y cambiar el estado a false
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    setIsLogin(false);
+    navigate('/Profesores');
+    
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -51,7 +58,7 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             to="SignIn"
-            href='./SignIn'
+            href="./SignIn"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -123,44 +130,44 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               page === 'Profesores' ? (
-              <Link key={page} to="Profesores" style={{ textDecoration: 'none' }}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              </Link>
-            ) : 
-            page === 'Home' ? (
-              <Link key={page} to="/" style={{ textDecoration: 'none' }}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              </Link>
-            ) :
-            page === 'Clases' ? (
-              <Link key={page} to="Clases" style={{ textDecoration: 'none' }}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              </Link>
-            ) :
-            (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))
+                <Link key={page} to="Profesores" style={{ textDecoration: 'none' }}>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    {page}
+                  </Button>
+                </Link>
+              ) :
+                page === 'Home' ? (
+                  <Link key={page} to="/" style={{ textDecoration: 'none' }}>
+                    <Button
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: 'white', display: 'block' }}
+                    >
+                      {page}
+                    </Button>
+                  </Link>
+                ) :
+                  page === 'Clases' ? (
+                    <Link key={page} to="Clases" style={{ textDecoration: 'none' }}>
+                      <Button
+                        onClick={handleCloseNavMenu}
+                        sx={{ my: 2, color: 'white', display: 'block' }}
+                      >
+                        {page}
+                      </Button>
+                    </Link>
+                  ) :
+                  (
+                    <Button
+                      key={page}
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: 'white', display: 'block' }}
+                    >
+                      {page}
+                    </Button>
+                  ))
             )}
           </Box>
 
@@ -186,20 +193,25 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => 
-                  setting === 'SignIn' ? (
-                    <Link key={setting} to="SignIn" onClick={handleCloseUserMenu} style={{ textDecoration: 'none' }}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </Link>
-                  ) : setting === 'SignUp' ? (
-                    <Link key={setting} to="SignUp" onClick={handleCloseUserMenu} style={{ textDecoration: 'none' }}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </Link>
-                  ) :(
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              {isLogin ? (
+                <>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">LogOut</Typography>
+                  </MenuItem>
+                  <Link to="ListaContratos" onClick={handleCloseUserMenu} style={{ textDecoration: 'none' }}>
+                    <Typography textAlign="center">Contratos</Typography>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/SignIn" onClick={handleCloseUserMenu} style={{ textDecoration: 'none' }}>
+                    <Typography textAlign="center">SignIn</Typography>
+                  </Link>
+                  <Link to="/SignUp" onClick={handleCloseUserMenu} style={{ textDecoration: 'none' }}>
+                    <Typography textAlign="center">SignUp</Typography>
+                  </Link>
+                </>
+              )}
             </Menu>
           </Box>
         </Toolbar>
@@ -207,4 +219,5 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

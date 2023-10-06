@@ -2,23 +2,15 @@ import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import MainFeaturedPost from './MainFeaturedPost';
-import FeaturedPost from './FeaturedPost';
-import Main from './Main';
-import Sidebar from './Sidebar';
+import MainFeaturedPost from '../componentes/MainFeaturedPost';
+import FeaturedPost from '../componentes/FeaturedPost';
 import Footer from '../componentes/Footer';
-import post1 from './blog-post.1.md';
-import post2 from './blog-post.2.md';
-import post3 from './blog-post.3.md';
+import Typography from '@mui/material/Typography';
 
 const mainFeaturedPost = {
   title: 'Escuelas Unidas',
-  description:
-    "Multiple Projectos son lo mejor",
+  description: 'Multiple Proyectos son lo mejor',
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',
   linkText: 'Continue reading…',
@@ -28,69 +20,105 @@ const featuredPosts = [
   {
     title: 'Nuestros Profesores',
     date: 'Nov 12',
-    description:
-      'Nuestros Profesores son los mejores',
+    description: 'Nuestros Profesores son los mejores',
     image: 'https://source.unsplash.com/random?wallpapers',
     imageLabel: 'Image Text',
+    materia: 'Materia1',
+    profesor: 'Profesor1',
+    tipo: 'Tipo1',
+    frecuencia: 'Frecuencia1',
   },
   {
     title: 'Nuestras Materias',
     date: 'Nov 11',
-    description:
-      'Nuestras Materias son las mejores',
+    description: 'Nuestras Materias son las mejores',
     image: 'https://source.unsplash.com/random?wallpapers',
     imageLabel: 'Image Text',
+    materia: 'Materia2',
+    profesor: 'Profesor2',
+    tipo: 'Tipo2',
+    frecuencia: 'Frecuencia2',
   },
 ];
 
-const posts = [post1, post2, post3];
-
-const sidebar = {
-  title: 'Nosotros',
-  description:
-    'Somos una organicazion que busca hacercar la Educacion',
-  archives: [
-    { title: 'March 2020', url: '#' },
-    { title: 'February 2020', url: '#' },
-    { title: 'January 2020', url: '#' },
-    { title: 'November 1999', url: '#' },
-    { title: 'October 1999', url: '#' },
-    { title: 'September 1999', url: '#' },
-    { title: 'August 1999', url: '#' },
-    { title: 'July 1999', url: '#' },
-    { title: 'June 1999', url: '#' },
-    { title: 'May 1999', url: '#' },
-    { title: 'April 1999', url: '#' },
-  ],
-};
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+// Estilo CSS personalizado
+const styles = {
+  container: {
+    backgroundColor: '#f8f8f8',
+    padding: '20px',
+    marginTop: '20px',
+  },
+  title: {
+    backgroundColor: '#007bff',
+    color: '#fff',
+    padding: '10px',
+    borderRadius: '5px',
+    marginBottom: '20px',
+  },
+  instructions: {
+    marginBottom: '20px',
+    border: '1px solid #ddd',
+    borderRadius: '5px',
+    padding: '10px',
+    boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.2)',
+    fontFamily: 'Arial, sans-serif', // Cambiar la fuente
+    fontSize: '18px', // Cambiar el tamaño de la fuente
+  },
+};
+
 export default function Blog() {
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <Container maxWidth="lg">
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />
+          {/* Renderiza los FeaturedPosts */}
           <Grid container spacing={4}>
             {featuredPosts.map((post) => (
               <FeaturedPost key={post.title} post={post} />
             ))}
           </Grid>
-          <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Main title="From the firehose" posts={posts} />
-            <Sidebar
-              title={sidebar.title}
-              description={sidebar.description}
-              archives={sidebar.archives}
-              social={sidebar.social}
-            />
-          </Grid>
+          {/* Instrucciones para unirse a una clase */}
+          <div style={styles.container}>
+            <Typography variant="h4" gutterBottom style={styles.title}>
+              Cómo unirse a una clase
+            </Typography>
+            <div style={styles.instructions}>
+              <Typography variant="body1" paragraph>
+                1. Navega a la página de "Clases" en el menú principal o utiliza nuestro buscador.
+              </Typography>
+            </div>
+            <div style={styles.instructions}>
+              <Typography variant="body1" paragraph>
+                2. Selecciona la clase a la que deseas unirte.
+              </Typography>
+            </div>
+            <div style={styles.instructions}>
+              <Typography variant="body1" paragraph>
+                3. Haz clic en el botón "View".
+              </Typography>
+            </div>
+            <div style={styles.instructions}>
+              <Typography variant="body1" paragraph>
+                4. Anota tus datos en cada uno de los casilleros.
+              </Typography>
+            </div>
+            <div style={styles.instructions}>
+              <Typography variant="body1" paragraph>
+                5. Espera a la respuesta del profesor.
+              </Typography>
+            </div>
+          </div>
         </main>
       </Container>
-      <Footer/>
+      <Footer />
     </ThemeProvider>
   );
 }
+
+
+

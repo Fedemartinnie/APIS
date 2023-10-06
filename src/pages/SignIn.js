@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../componentes/AuthContext';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,20 +12,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link, useHistory, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SignUp from '../pages/SignUp';
-import userEvent from '@testing-library/user-event';
+
 
 function SignIn() {
-
+  const { setIsLogin } = useContext(AuthContext);
   const defaultTheme = createTheme();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   
   const [error, setError] = useState('');
-  const [authenticated, setAuthenticated] = useState(false); // Agrega un estado para el estado de autenticación
+  /*const [authenticated, setAuthenticated] = useState(
+    localStorage.getItem('authenticated') === 'true'
+  );*/
+  //const [authenticated, setAuthenticated] = useState(false); // Agrega un estado para el estado de autenticación
   const navigate = useNavigate(); 
 
   const handleChange = (event) => {
@@ -36,19 +41,16 @@ function SignIn() {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-
     //console.log('Email ingresado:', formData.email);
     //console.log('Contraseña ingresada:', formData.password);  
 
-    // Simulación de lógica de autenticación (reemplaza con tu lógica real)
+    // Simulación de autenticación
     const { email, password } = formData;
-    if (email === 'fede@hotmail.com' && password === '111') {
+    if (email === 'f' && password === '1') {
       // Autenticación exitosa
       console.log('Autenticación exitosa');
-      // Realizar la acción de inicio de sesión aquí
-      setAuthenticated(true); // Establece el estado de autenticación en verdadero
-      navigate('/Profesores');
+      setIsLogin(true); // Actualiza el estado a true
+      navigate('/DatosProfesor');
     } else {
       // Autenticación fallida
       setError('Datos ingresados incorrectos');

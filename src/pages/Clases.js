@@ -15,7 +15,7 @@ import Container from '@mui/material/Container';
 import { Link } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormPropsTextFields from '../componentes/Forms';
-import VistaClase from '../pages/VistaClase';
+import VistaClase from './VistaClase';
 import Comentario from '../componentes/FeedBack';
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
